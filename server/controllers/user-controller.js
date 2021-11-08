@@ -2,8 +2,8 @@ const auth = require('../auth')
 const User = require('../models/user-model')
 const bcrypt = require('bcryptjs')
 
-getLoggedIn = async (req, res) => {
-    auth.verify(req, res, async function () {
+getLoggedIn = async(req, res) => {
+    auth.verify(req, res, async function() {
         const loggedInUser = await User.findOne({ _id: req.userId });
         return res.status(200).json({
             loggedIn: true,
@@ -16,7 +16,7 @@ getLoggedIn = async (req, res) => {
     })
 }
 
-registerUser = async (req, res) => {
+registerUser = async(req, res) => {
     try {
         const { firstName, lastName, email, password, passwordVerify } = req.body;
         if (!firstName || !lastName || !email || !password || !passwordVerify) {
@@ -53,7 +53,10 @@ registerUser = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, salt);
 
         const newUser = new User({
-            firstName, lastName, email, passwordHash
+            firstName,
+            lastName,
+            email,
+            passwordHash
         });
         const savedUser = await newUser.save();
 
@@ -85,35 +88,45 @@ loginUser = async(req, res) => {
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
-            }
+        }
         const existingUser = await User.findOne({ email: email });
         if (!existingUser) {
             return res
                 .status(400)
                 .json({ success: false, errorMessage: "An account with this email address does not exist." })
-            }
-        const jwt = require ("jsonwebtoken");
+        }
+        const jwt = require("jsonwebtoken");
 
         passwordCorrect = await bcrypt.compare(password, existingUser.passwordHash);
-        if(!passwordCorrect) {
+        if (!passwordCorrect) {
             return res
                 .status(400)
                 .json({ success: false, errorMessage: "Password is incorrect." })
-            } else {
-                const token = jwt.sign({ userId: existingUser._id }, process.env.JWT_SECRET);
-                await res.cookie("token", token, {
-                httpOnly: true, secure: true, sameSite: "none"
-                }).status(200).json({
-                    success: true,
-                    user: { 
-                        email : existingUser.email,
-                        firstName : existingUser.firstName,
-                        lastName : existingUser.lastName
-                    }
+        } else {
+            const token = jwt.sign({ userId: existingUser._id }, process.env.JWT_SECRET);
+            await res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none"
+            }).status(200).json({
+                success: true,
+                user: {
+                    email: existingUser.email,
+                    firstName: existingUser.firstName,
+                    lastName: existingUser.lastName
+                }
             }).send();
-        } 
+        }
     } catch (err) {
         console.error(err);
+        res.status(500).send();
+    }
+}
+
+logoutUser = (req, res) => {
+    try {
+        res.clearCookie("token").status(200).json({ success: true });
+    } catch (err) {
         res.status(500).send();
     }
 }
@@ -121,5 +134,6 @@ loginUser = async(req, res) => {
 module.exports = {
     getLoggedIn,
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser
 }

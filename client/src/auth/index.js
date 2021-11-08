@@ -9,7 +9,8 @@ console.log("create AuthContext: " + AuthContext);
 export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     REGISTER_USER: "REGISTER_USER",
-    LOGIN_USER: "LOGIN_USER"
+    LOGIN_USER: "LOGIN_USER",
+    LOGOUT_USER: "LOGOUT_USER"
 }
 
 function AuthContextProvider(props) {
@@ -36,13 +37,19 @@ function AuthContextProvider(props) {
                 return setAuth({
                     user: payload.user,
                     loggedIn: true,
-                })
+                });
             }
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
                     loggedIn: payload.loggedIn,
-                })
+                });
+            }
+            case AuthActionType.LOGOUT_USER: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false
+                });
             }
             default:
                 return auth;
@@ -53,7 +60,7 @@ function AuthContextProvider(props) {
         const response = await api.getLoggedIn();
         if (response.status === 200) {
             authReducer({
-                type: AuthActionType.SET_LOGGED_IN,
+                type: AuthActionType.GET_LOGGED_IN,
                 payload: {
                     loggedIn: response.data.loggedIn,
                     user: response.data.user
@@ -111,6 +118,25 @@ function AuthContextProvider(props) {
                 }
             });
             store.setError(err.response.data.errorMessage);
+        }
+    }
+
+    auth.logoutUser = async function() {
+        try{
+            const res = await api.logoutUser();
+            if (res.status === 200) {
+                authReducer({
+                    type: AuthActionType.LOGOUT_USER,
+                    payload: {}
+                });
+            history.push("/");
+            }
+        } catch(err) {
+            authReducer({
+                type: AuthActionType.LOGOUT_USER,
+                payload: {}
+            });
+        history.push("/");
         }
     }
 
