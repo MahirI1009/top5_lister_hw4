@@ -5,6 +5,7 @@ import HomeWrapper from './HomeWrapper'
 import ListCard from './ListCard'
 import RegisterScreen from './RegisterScreen'
 import LoginScreen from './LoginScreen'
+import AccountErrorModal from './AccountErrorModal'
 import SplashScreen from './SplashScreen'
 import Statusbar from './Statusbar'
 import Top5Item from './Top5Item'
@@ -23,6 +24,7 @@ export {
     ListCard,
     RegisterScreen,
     LoginScreen,
+    AccountErrorModal,
     SplashScreen,
     Statusbar,
     Top5Item,
