@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import AuthContext from '../auth';
 import { GlobalStoreContext } from '../store'
 import EditToolbar from './EditToolbar'
@@ -81,7 +81,10 @@ export default function AppBanner() {
     }
     
     function getAccountMenu(loggedIn) {
-        return <AccountCircle />;
+        if(loggedIn) {
+            return <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>{auth.user.firstName.charAt(0)}{auth.user.lastName.charAt(0)}</Link>
+        }
+        else {return <AccountCircle />;}
     }
 
     return (

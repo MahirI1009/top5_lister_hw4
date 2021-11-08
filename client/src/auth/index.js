@@ -100,6 +100,7 @@ function AuthContextProvider(props) {
                 });
             history.push("/");
             store.loadIdNamePairs();
+            store.setError("");
             }
         } catch(err) {
             authReducer({

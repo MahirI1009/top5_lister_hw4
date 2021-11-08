@@ -22,12 +22,15 @@ const style = {
 
 export default function BasicModal() {
   const { store } = useContext(GlobalStoreContext);
-  const handleClose = () => store.setError("");
   let isOpen = false;
   let errorMessage = "";
   if (store.errMessage !== "") {
     errorMessage = store.errMessage;
     isOpen = true;
+  } 
+  const handleClose = () => {
+    store.setError("");
+    isOpen = false;
   }
 
   return (

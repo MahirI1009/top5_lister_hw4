@@ -105,7 +105,11 @@ loginUser = async(req, res) => {
                 httpOnly: true, secure: true, sameSite: "none"
                 }).status(200).json({
                     success: true,
-                    user: { email : existingUser.email }
+                    user: { 
+                        email : existingUser.email,
+                        firstName : existingUser.firstName,
+                        lastName : existingUser.lastName
+                    }
             }).send();
         } 
     } catch (err) {
