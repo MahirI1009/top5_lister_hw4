@@ -78,7 +78,44 @@ registerUser = async (req, res) => {
     }
 }
 
+loginUser = async(req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res
+                .status(400)
+                .json({ errorMessage: "Please enter all required fields." });
+            }
+        const existingUser = await User.findOne({ email: email });
+        if (!existingUser) {
+            return res
+                .status(400)
+                .json({ success: false, errorMessage: "An account with this email address does not exist." })
+            }
+        const jwt = require ("jsonwebtoken");
+
+        passwordCorrect = await bcrypt.compare(password, existingUser.passwordHash);
+        if(!passwordCorrect) {
+            return res
+                .status(400)
+                .json({ success: false, errorMessage: "Password is incorrect." })
+            } else {
+                const token = jwt.sign({ userId: existingUser._id }, process.env.JWT_SECRET);
+                await res.cookie("token", token, {
+                httpOnly: true, secure: true, sameSite: "none"
+                }).status(200).json({
+                    success: true,
+                    user: { email : existingUser.email }
+            }).send();
+        } 
+    } catch (err) {
+        console.error(err);
+        res.status(500).send();
+    }   
+}
+
 module.exports = {
     getLoggedIn,
-    registerUser
+    registerUser,
+    loginUser
 }
