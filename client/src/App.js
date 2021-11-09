@@ -9,6 +9,7 @@ import {
     RegisterScreen,
     LoginScreen,
     AccountErrorModal,
+    DeleteModal,
     Statusbar,
     WorkspaceScreen
 } from './components'

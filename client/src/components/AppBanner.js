@@ -81,10 +81,14 @@ export default function AppBanner() {
     }
     
     function getAccountMenu(loggedIn) {
-        if(loggedIn) {
-            return <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>{auth.user.firstName.charAt(0)}{auth.user.lastName.charAt(0)}</Link>
+        try {
+            if(loggedIn) {
+                return <Link style={{ textDecoration: 'none', color: 'white' }} to='/'>{auth.user.firstName.charAt(0)}{auth.user.lastName.charAt(0)}</Link>
+            }
+            else {return <AccountCircle />;}
+        } catch (err) {
+            return <AccountCircle />;
         }
-        else {return <AccountCircle />;}
     }
 
     return (

@@ -111,14 +111,14 @@ function GlobalStoreContextProvider(props) {
                 // PREPARE TO DELETE A LIST
             case GlobalStoreActionType.MARK_LIST_FOR_DELETION:
                 {
-                    return setStore({
-                        idNamePairs: store.idNamePairs,
-                        currentList: null,
-                        newListCounter: store.newListCounter,
-                        isListNameEditActive: false,
-                        isItemEditActive: false,
-                        listMarkedForDeletion: payload,
-                        errMessage: ""
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: payload,
+                    errMessage: ""
                     });
                 }
                 // PREPARE TO DELETE A LIST
@@ -285,29 +285,22 @@ function GlobalStoreContextProvider(props) {
     // OF A LIST, WHICH INCLUDES USING A VERIFICATION MODAL. THE
     // FUNCTIONS ARE markListForDeletion, deleteList, deleteMarkedList,
     // showDeleteListModal, and hideDeleteListModal
-    store.markListForDeletion = async function(id) {
-        // GET THE LIST
-        let response = await api.getTop5ListById(id);
-        if (response.data.success) {
-            let top5List = response.data.top5List;
-            storeReducer({
-                type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-                payload: top5List
-            });
+    store.markListForDeletion = function (id) {
+        storeReducer({
+            type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+            payload: id
+        });
+    }
+    store.deleteList = function (id) {
+        async function processDelete(id) {
+            let response = await api.deleteTop5ListById(id);
+            if (response.data.success) {
+                store.loadIdNamePairs();
+            }
         }
+        processDelete(id);
     }
-
-    store.deleteList = async function(listToDelete) {
-        let response = await api.deleteTop5ListById(listToDelete._id);
-        if (response.data.success) {
-            store.loadIdNamePairs();
-            history.push("/");
-        }
-    }
-
-    store.deleteMarkedList = function() {
-        store.deleteList(store.listMarkedForDeletion);
-    }
+    store.deleteMarkedList = function() { store.deleteList(store.listMarkedForDeletion); }
 
     store.unmarkListForDeletion = function() {
         storeReducer({
