@@ -13,7 +13,9 @@ import EditIcon from '@mui/icons-material/Edit';
 */
 function Top5Item(props) {
     const { store } = useContext(GlobalStoreContext);
-    const [editActive, setEditActive] = useState(false);
+    const [ editActive, setEditActive ] = useState(false);
+    const [ name, setName ] = useState("");
+    const {text, index} = props;
     const [draggedTo, setDraggedTo] = useState(0);
 
     function handleDragStart(event, targetId) {
@@ -48,15 +50,44 @@ function Top5Item(props) {
         store.addMoveItemTransaction(sourceId, targetId);
     }
 
-    let { index } = props;
-
     let itemClass = "top5-item";
     if (draggedTo) {
         itemClass = "top5-item-dragged-to";
     }
 
-    return (
-            <ListItem
+    function handleKeyPress(event) {
+        let name = event.target.value;
+        let oldName = props.text;
+        if (event.code === "Enter") {
+            store.addUpdateItemTransaction(index, name);
+            toggleEdit();
+        }
+    }
+
+    function handleToggleEdit(event) {
+        event.stopPropagation();
+        toggleEdit();
+    }
+
+    function toggleEdit() {
+        let newActive = !editActive;
+        if (newActive) {
+            store.setIsItemEditActive();
+        }
+        setEditActive(newActive);
+    }
+
+    function handleUpdateText(event) {
+        setName(event.target.value);
+    }
+
+    let cardStatus = false;
+    if (store.isItemEditActive) {
+        cardStatus = true;
+    }
+
+    let cardElement = 
+        <ListItem
                 id={'item-' + (index+1)}
                 key={props.key}
                 className={itemClass}
@@ -83,13 +114,26 @@ function Top5Item(props) {
                 }}
             >
             <Box sx={{ p: 1 }}>
-                <IconButton aria-label='edit'>
+                <IconButton aria-label='edit' onClick={handleToggleEdit} >
                     <EditIcon style={{fontSize:'48pt'}}  />
                 </IconButton>
             </Box>
                 <Box sx={{ p: 1, flexGrow: 1 }}>{props.text}</Box>
-            </ListItem>
-    )
+            </ListItem>;
+
+    if (editActive) {
+        cardElement =
+            <input
+                id={"item-" + index + 1}
+                className={itemClass}
+                type='text'
+                onKeyPress={handleKeyPress}
+                onChange={handleUpdateText}
+                defaultValue={text}
+            />;
+    }
+
+    return (cardElement);
 }
 
 export default Top5Item;
