@@ -270,7 +270,8 @@ function GlobalStoreContextProvider(props) {
     store.loadIdNamePairs = async function() {
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
-            let pairsArray = response.data.idNamePairs;
+            let oldPairsArray = response.data.idNamePairs;
+            let pairsArray = oldPairsArray.filter(list => list.ownerEmail === auth.user.email);
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                 payload: pairsArray
@@ -414,12 +415,7 @@ function GlobalStoreContextProvider(props) {
         });
     }
 
-    return ( <
-        GlobalStoreContext.Provider value = {
-            {
-                store
-            }
-        } > { props.children } < /GlobalStoreContext.Provider> );
+    return ( <GlobalStoreContext.Provider value = { { store } } > { props.children } </GlobalStoreContext.Provider> );
     }
 
     export default GlobalStoreContext;
