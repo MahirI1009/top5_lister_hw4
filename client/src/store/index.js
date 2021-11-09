@@ -44,7 +44,9 @@ function GlobalStoreContextProvider(props) {
         listNameActive: false,
         itemActive: false,
         listMarkedForDeletion: null,
-        errMessage: ""
+        errMessage: "",
+        hasUndo: false,
+        hasRedo: false
     });
     const history = useHistory();
 
@@ -66,7 +68,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: false,
                         isItemEditActive: false,
                         listMarkedForDeletion: null,
-                        errMessage: ""
+                        errMessage: "",
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     });
                 }
                 // STOP EDITING THE CURRENT LIST
@@ -79,7 +83,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: false,
                         isItemEditActive: false,
                         listMarkedForDeletion: null,
-                        errMessage: ""
+                        errMessage: "",
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     })
                 }
                 // CREATE A NEW LIST
@@ -92,7 +98,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: false,
                         isItemEditActive: false,
                         listMarkedForDeletion: null,
-                        errMessage: ""
+                        errMessage: "",
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     })
                 }
                 // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -105,7 +113,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: false,
                         isItemEditActive: false,
                         listMarkedForDeletion: null,
-                        errMessage: ""
+                        errMessage: "",
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     });
                 }
                 // PREPARE TO DELETE A LIST
@@ -118,7 +128,9 @@ function GlobalStoreContextProvider(props) {
                     isListNameEditActive: false,
                     isItemEditActive: false,
                     listMarkedForDeletion: payload,
-                    errMessage: ""
+                    errMessage: "",
+                    hasUndo: tps.hasTransactionToUndo(),
+                    hasRedo: tps.hasTransactionToRedo()
                     });
                 }
                 // PREPARE TO DELETE A LIST
@@ -131,7 +143,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: false,
                         isItemEditActive: false,
                         listMarkedForDeletion: null,
-                        errMessage: ""
+                        errMessage: "",
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     });
                 }
                 // UPDATE A LIST
@@ -144,7 +158,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: false,
                         isItemEditActive: false,
                         listMarkedForDeletion: null,
-                        errMessage: ""
+                        errMessage: "",
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     });
                 }
                 // START EDITING A LIST ITEM
@@ -157,7 +173,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: false,
                         isItemEditActive: true,
                         listMarkedForDeletion: null,
-                        errMessage: ""
+                        errMessage: "",
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     });
                 }
                 // START EDITING A LIST NAME
@@ -170,7 +188,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: true,
                         isItemEditActive: false,
                         listMarkedForDeletion: null,
-                        errMessage: ""
+                        errMessage: "",
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     });
                 }
                 //SET AN ERROR MESSAGE FOR ERROR MODAL
@@ -183,7 +203,9 @@ function GlobalStoreContextProvider(props) {
                         isListNameEditActive: false,
                         isItemEditActive: false,
                         listMarkedForDeletion: null,
-                        errMessage: payload.errMessage
+                        errMessage: payload.errMessage,
+                        hasUndo: tps.hasTransactionToUndo(),
+                        hasRedo: tps.hasTransactionToRedo()
                     });
                 }
             default:
